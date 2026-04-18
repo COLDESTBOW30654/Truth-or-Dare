@@ -196,7 +196,7 @@ createApp({
                 return;
             }
             
-            let question, questionType;
+            let questionObj, questionType;
             
             if (type === 'truth') {
                 if (truthQuestions.value.length === 0) {
@@ -204,7 +204,7 @@ createApp({
                     return;
                 }
                 const index = Math.floor(Math.random() * truthQuestions.value.length);
-                question = getQuestionText(truthQuestions.value[index]);
+                questionObj = truthQuestions.value[index];
                 questionType = 'truth';
             } else if (type === 'dare') {
                 if (dareQuestions.value.length === 0) {
@@ -212,36 +212,38 @@ createApp({
                     return;
                 }
                 const index = Math.floor(Math.random() * dareQuestions.value.length);
-                question = getQuestionText(dareQuestions.value[index]);
+                questionObj = dareQuestions.value[index];
                 questionType = 'dare';
             } else {
                 if (truthQuestions.value.length === 0) {
                     const index = Math.floor(Math.random() * dareQuestions.value.length);
-                    question = getQuestionText(dareQuestions.value[index]);
+                    questionObj = dareQuestions.value[index];
                     questionType = 'dare';
                 } else if (dareQuestions.value.length === 0) {
                     const index = Math.floor(Math.random() * truthQuestions.value.length);
-                    question = getQuestionText(truthQuestions.value[index]);
+                    questionObj = truthQuestions.value[index];
                     questionType = 'truth';
                 } else {
                     if (Math.random() < 0.5) {
                         const index = Math.floor(Math.random() * truthQuestions.value.length);
-                        question = getQuestionText(truthQuestions.value[index]);
+                        questionObj = truthQuestions.value[index];
                         questionType = 'truth';
                     } else {
                         const index = Math.floor(Math.random() * dareQuestions.value.length);
-                        question = getQuestionText(dareQuestions.value[index]);
+                        questionObj = dareQuestions.value[index];
                         questionType = 'dare';
                     }
                 }
             }
             
+            const questionText = getQuestionText(questionObj);
             currentQuestion.value = {
-                text: question,
-                type: questionType
+                text: questionText,
+                type: questionType,
+                types: typeof questionObj === 'object' ? (questionObj.types || []) : []
             };
             
-            addToHistory(questionType, question);
+            addToHistory(questionType, questionText);
         }
         
         function addCustomQuestion() {
@@ -363,31 +365,36 @@ createApp({
             const playerIndex = Math.floor(Math.random() * players.value.length);
             const player = players.value[playerIndex];
             
-            let question, questionType;
+            let questionObj, questionType;
             if (Math.random() < 0.5) {
                 const index = Math.floor(Math.random() * truthQuestions.value.length);
-                question = getQuestionText(truthQuestions.value[index]);
+                questionObj = truthQuestions.value[index];
                 questionType = 'truth';
             } else {
                 const index = Math.floor(Math.random() * dareQuestions.value.length);
-                question = getQuestionText(dareQuestions.value[index]);
+                questionObj = dareQuestions.value[index];
                 questionType = 'dare';
             }
             
+            const questionText = getQuestionText(questionObj);
+            const questionTypes = typeof questionObj === 'object' ? (questionObj.types || []) : [];
+            
             combinedResult.value = {
                 player,
-                question,
-                type: questionType
+                question: questionText,
+                type: questionType,
+                types: questionTypes
             };
             
             currentQuestion.value = {
-                text: question,
-                type: questionType
+                text: questionText,
+                type: questionType,
+                types: questionTypes
             };
             
             selectedPlayer.value = player;
             
-            addToHistory(questionType, `${player} - ${question}`);
+            addToHistory(questionType, `${player} - ${questionText}`);
         }
         
         function generateQuickPlayers() {
@@ -419,7 +426,7 @@ createApp({
                 return;
             }
             
-            let question, questionType;
+            let questionObj, questionType;
             
             if (type === 'truth') {
                 if (truthQuestions.value.length === 0) {
@@ -427,7 +434,7 @@ createApp({
                     return;
                 }
                 const index = Math.floor(Math.random() * truthQuestions.value.length);
-                question = getQuestionText(truthQuestions.value[index]);
+                questionObj = truthQuestions.value[index];
                 questionType = 'truth';
             } else {
                 if (dareQuestions.value.length === 0) {
@@ -435,22 +442,27 @@ createApp({
                     return;
                 }
                 const index = Math.floor(Math.random() * dareQuestions.value.length);
-                question = getQuestionText(dareQuestions.value[index]);
+                questionObj = dareQuestions.value[index];
                 questionType = 'dare';
             }
             
+            const questionText = getQuestionText(questionObj);
+            const questionTypes = typeof questionObj === 'object' ? (questionObj.types || []) : [];
+            
             quickCurrentQuestion.value = {
-                text: question,
-                type: questionType
+                text: questionText,
+                type: questionType,
+                types: questionTypes
             };
             
             quickCombinedResult.value = {
                 player: quickSelectedPlayer.value,
-                question: question,
-                type: questionType
+                question: questionText,
+                type: questionType,
+                types: questionTypes
             };
             
-            addToHistory(questionType, `${quickSelectedPlayer.value} - ${question}`);
+            addToHistory(questionType, `${quickSelectedPlayer.value} - ${questionText}`);
         }
         
         function quickRandomAll() {
