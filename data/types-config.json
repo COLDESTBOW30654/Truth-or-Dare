@@ -1,0 +1,76 @@
+{
+    "types": {
+        "朋友": {
+            "name": "朋友",
+            "description": "适合朋友间的问题",
+            "defaultSelected": true,
+            "files": {
+                "truth": "data/truth/friend.json",
+                "dare": "data/dare/friend.json"
+            }
+        },
+        "聚会": {
+            "name": "聚会",
+            "description": "适合聚会场合",
+            "defaultSelected": true,
+            "files": {
+                "truth": "data/truth/party.json",
+                "dare": "data/dare/party.json"
+            }
+        },
+        "恋人": {
+            "name": "恋人",
+            "description": "适合恋人之间",
+            "defaultSelected": false,
+            "files": {
+                "truth": "data/truth/lover.json",
+                "dare": "data/dare/lover.json"
+            }
+        },
+        "情侣": {
+            "name": "情侣",
+            "description": "适合情侣之间",
+            "defaultSelected": false,
+            "files": {
+                "truth": "data/truth/couple.json",
+                "dare": "data/dare/couple.json"
+            }
+        },
+        "社牛": {
+            "name": "社牛",
+            "description": "需要社牛属性",
+            "defaultSelected": false,
+            "files": {
+                "truth": "data/truth/social.json",
+                "dare": "data/dare/social.json"
+            }
+        },
+        "丢脸": {
+            "name": "丢脸",
+            "description": "尴尬类型",
+            "defaultSelected": false,
+            "files": {
+                "truth": "data/truth/embarrassing.json",
+                "dare": "data/dare/embarrassing.json"
+            }
+        },
+        "玩笑": {
+            "name": "玩笑",
+            "description": "轻松玩笑类",
+            "defaultSelected": true,
+            "files": {
+                "truth": "data/truth/joke.json",
+                "dare": "data/dare/joke.json"
+            }
+        },
+        "成人": {
+            "name": "成人",
+            "description": "成人内容",
+            "defaultSelected": false,
+            "files": {
+                "truth": "data/truth/adult.json",
+                "dare": "data/dare/adult.json"
+            }
+        }
+    }
+}

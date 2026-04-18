@@ -26,6 +26,18 @@
 
 真心话·大冒险是一款经典的聚会游戏网页应用，适合朋友聚会、团队建设、破冰活动等场景。通过随机抽取玩家和题目，让游戏更加公平有趣，增进彼此了解，创造欢乐回忆。
 
+## 🌐 在线预览
+
+<p align="center">
+  <a href="https://truth-or-dare.blym.top/">
+    <img src="https://img.shields.io/badge/在线预览-点击访问-brightgreen?style=for-the-badge&logo=google-chrome" alt="在线预览">
+  </a>
+</p>
+
+<p align="center">
+  <b>👉 <a href="https://truth-or-dare.blym.top/">https://truth-or-dare.blym.top/</a></b>
+</p>
+
 ## ✨ 功能特点
 
 ### 🎯 快速模式
@@ -104,15 +116,16 @@ npx serve
 
 ```
 Truth-or-Dare/
-├── index.html          # 主页面
+├── index.html              # 主页面
 ├── css/
-│   └── styles.css      # 样式文件
+│   └── styles.css          # 样式文件
 ├── js/
-│   └── app.js          # Vue 应用逻辑
+│   └── app.js              # 应用逻辑
 ├── data/
-│   ├── truth.json      # 真心话题库 (210+ 题)
-│   └── dare.json       # 大冒险题库 (170+ 题)
-└── README.md           # 项目说明
+│   ├── types-config.json   # 类型配置文件（记录类型与文件映射）
+│   ├── truth/              # 真心话题库目录
+│   └── dare/               # 大冒险题库目录
+└── README.md               # 项目说明
 ```
 
 ## 🛠 技术栈
@@ -126,27 +139,55 @@ Truth-or-Dare/
 
 ## 📝 题库格式
 
-题库采用 JSON 格式存储，支持类型标签：
+题库按类型分文件存储，每个文件包含该类型的所有题目：
+
+### 类型配置文件 (types-config.json)
 
 ```json
 {
-  "questions": [
-    {
-      "text": "题目内容",
-      "types": ["朋友", "聚会"]
-    },
-    {
-      "text": "另一个题目",
-      "types": ["恋人", "情侣"]
+    "types": {
+        "朋友": {
+            "name": "朋友",
+            "description": "适合朋友间的问题",
+            "defaultSelected": true,
+            "files": {
+                "truth": "data/truth/friend.json",
+                "dare": "data/dare/friend.json"
+            }
+        }
     }
-  ]
+}
+```
+
+### 题目文件格式
+
+每个类型文件采用以下 JSON 格式：
+
+```json
+{
+    "type": "朋友",
+    "description": "适合朋友间的真心话问题",
+    "questions": [
+        {"text": "你最近一次撒谎是什么时候？关于什么的？"},
+        {"text": "你有没有偷偷喜欢过朋友的对象？是谁？"}
+    ]
 }
 ```
 
 ### 字段说明
 
-- `text`：题目内容（必填）
-- `types`：题目类型标签数组（可选，用于筛选）
+**类型配置文件：**
+- `name`：类型名称
+- `description`：类型描述
+- `defaultSelected`：是否默认选中
+- `files.truth`：真心话文件路径
+- `files.dare`：大冒险文件路径
+
+**题目文件：**
+- `type`：题目类型
+- `description`：类型描述
+- `questions`：题目数组
+  - `text`：题目内容（必填）
 
 ## ⚠️ 注意事项
 
@@ -168,22 +209,55 @@ Truth-or-Dare/
 
 欢迎贡献更多有趣的题目！请遵循以下格式：
 
+**添加新题目到对应类型文件：**
+
 ```json
 {
-  "text": "你的题目内容",
-  "types": ["类型1", "类型2"]
+    "type": "朋友",
+    "description": "适合朋友间的真心话问题",
+    "questions": [
+        {"text": "你的题目内容"}
+    ]
 }
 ```
+
+**添加新类型：**
+
+1. 在 `data/truth/` 或 `data/dare/` 目录下创建新的 JSON 文件
+2. 在 `data/types-config.json` 中添加类型配置
+
+## 💡 参与贡献题库
+
+<p align="center">
+  <b>想让游戏更有趣？快来贡献你的创意题目吧！</b>
+</p>
+
+<p align="center">
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/main/data/truth/">
+    <img src="https://img.shields.io/badge/编辑真心话-blue?style=for-the-badge&logo=github" alt="朋友真心话">
+  </a>
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/main/data/dare/">
+    <img src="https://img.shields.io/badge/编辑大冒险-pink?style=for-the-badge&logo=github" alt="朋友大冒险">
+  </a>
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/edit/main/data/types-config.json">
+    <img src="https://img.shields.io/badge/编辑类型配置-purple?style=for-the-badge&logo=github" alt="编辑类型配置">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/pulls">
+    <img src="https://img.shields.io/badge/查看所有PR-orange?style=for-the-badge&logo=github" alt="查看PR">
+  </a>
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/fork">
+    <img src="https://img.shields.io/badge/Fork本项目-blueviolet?style=for-the-badge&logo=github" alt="Fork">
+  </a>
+</p>
 
 ## 📄 许可证
 
 本项目采用 [MIT](LICENSE) 许可证。
 
 ## 🤖 AI 开发声明
-
-<p align="center">
-  <img src="https://img.shields.io/badge/开发方式-AI辅助-blueviolet?logo=openai" alt="AI Assisted">
-</p>
 
 **本项目全程使用 AI 工具辅助开发**，包括但不限于：
 
@@ -196,29 +270,6 @@ Truth-or-Dare/
 
 - 感谢所有贡献者的支持
 - 感谢 Vue.js 和 Tailwind CSS 社区
-
-***
-
-## 💡 参与贡献题库
-
-<p align="center">
-  <b>想让游戏更有趣？快来贡献你的创意题目吧！</b>
-</p>
-
-<p align="center">
-  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/edit/main/data/truth.json">
-    <img src="https://img.shields.io/badge/编辑真心话题库-blue?style=for-the-badge&logo=github" alt="编辑真心话题库">
-  </a>
-  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/edit/main/data/dare.json">
-    <img src="https://img.shields.io/badge/编辑大冒险题库-pink?style=for-the-badge&logo=github" alt="编辑大冒险题库">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/pulls">
-    <img src="https://img.shields.io/badge/查看所有PR-purple?style=for-the-badge&logo=github" alt="查看PR">
-  </a>
-</p>
 
 ***
 

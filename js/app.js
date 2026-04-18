@@ -11,8 +11,9 @@ createApp({
         const customTruthQuestions = ref([]);
         const customDareQuestions = ref([]);
         
-        const allTypes = ['朋友', '聚会', '恋人', '情侣', '社牛', '丢脸', '玩笑', '成人'];
-        const selectedTypes = ref(['朋友', '聚会','玩笑']);
+        const typesConfig = ref(null);
+        const allTypes = ref([]);
+        const selectedTypes = ref([]);
         
         const currentQuestion = ref(null);
         const customQuestion = ref('');
@@ -46,7 +47,7 @@ createApp({
         const truthCount = computed(() => truthQuestions.value.length);
         const dareCount = computed(() => dareQuestions.value.length);
         const playerTotal = computed(() => players.value.length);
-        const isAllSelected = computed(() => selectedTypes.value.length === allTypes.length);
+        const isAllSelected = computed(() => selectedTypes.value.length === allTypes.value.length);
         
         function filterQuestionsByTypes(questions, types) {
             if (types.length === 0) return [];
@@ -66,23 +67,70 @@ createApp({
                 isLoading.value = true;
                 loadError.value = null;
                 
-                const [truthResponse, dareResponse] = await Promise.all([
-                    fetch('./data/truth.json'),
-                    fetch('./data/dare.json')
+                const configResponse = await fetch('./data/types-config.json');
+                if (!configResponse.ok) {
+                    throw new Error('无法加载类型配置');
+                }
+                
+                const config = await configResponse.json();
+                typesConfig.value = config;
+                
+                allTypes.value = Object.keys(config.types);
+                selectedTypes.value = Object.entries(config.types)
+                    .filter(([_, typeConfig]) => typeConfig.defaultSelected)
+                    .map(([name, _]) => name);
+                
+                const truthFiles = [];
+                const dareFiles = [];
+                
+                for (const [typeName, typeConfig] of Object.entries(config.types)) {
+                    if (typeConfig.files.truth) {
+                        truthFiles.push({ type: typeName, file: typeConfig.files.truth });
+                    }
+                    if (typeConfig.files.dare) {
+                        dareFiles.push({ type: typeName, file: typeConfig.files.dare });
+                    }
+                }
+                
+                const truthPromises = truthFiles.map(async ({ type, file }) => {
+                    try {
+                        const response = await fetch('./' + file);
+                        if (!response.ok) return [];
+                        const data = await response.json();
+                        const questions = (data.questions || []).map(q => ({
+                            ...q,
+                            types: q.types || [type]
+                        }));
+                        return questions;
+                    } catch (e) {
+                        console.warn(`加载 ${file} 失败:`, e);
+                        return [];
+                    }
+                });
+                
+                const darePromises = dareFiles.map(async ({ type, file }) => {
+                    try {
+                        const response = await fetch('./' + file);
+                        if (!response.ok) return [];
+                        const data = await response.json();
+                        const questions = (data.questions || []).map(q => ({
+                            ...q,
+                            types: q.types || [type]
+                        }));
+                        return questions;
+                    } catch (e) {
+                        console.warn(`加载 ${file} 失败:`, e);
+                        return [];
+                    }
+                });
+                
+                const [truthResults, dareResults] = await Promise.all([
+                    Promise.all(truthPromises),
+                    Promise.all(darePromises)
                 ]);
                 
-                if (!truthResponse.ok) {
-                    throw new Error('无法加载真心话题库');
-                }
-                if (!dareResponse.ok) {
-                    throw new Error('无法加载大冒险题库');
-                }
-                
-                const truthData = await truthResponse.json();
-                const dareData = await dareResponse.json();
-                
-                defaultTruthQuestions.value = truthData.questions || [];
-                defaultDareQuestions.value = dareData.questions || [];
+                defaultTruthQuestions.value = truthResults.flat();
+                defaultDareQuestions.value = dareResults.flat();
                 truthQuestionsRaw.value = [...defaultTruthQuestions.value];
                 dareQuestionsRaw.value = [...defaultDareQuestions.value];
                 
@@ -104,6 +152,10 @@ createApp({
                 ];
                 truthQuestionsRaw.value = [...defaultTruthQuestions.value];
                 dareQuestionsRaw.value = [...defaultDareQuestions.value];
+                
+                allTypes.value = ['朋友', '聚会', '恋人', '情侣', '社牛', '丢脸', '玩笑', '成人'];
+                selectedTypes.value = ['朋友', '聚会', '玩笑'];
+                
                 updateFilteredQuestions();
             } finally {
                 isLoading.value = false;
@@ -129,7 +181,7 @@ createApp({
         }
         
         function selectAllTypes() {
-            selectedTypes.value = [...allTypes];
+            selectedTypes.value = [...allTypes.value];
             updateFilteredQuestions();
         }
         
