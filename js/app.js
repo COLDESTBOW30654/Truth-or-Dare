@@ -1,17 +1,23 @@
-const { createApp, ref, computed, onMounted } = Vue;
+const { createApp, ref, computed, onMounted, watch } = Vue;
 
 createApp({
     setup() {
         const defaultTruthQuestions = ref([]);
         const defaultDareQuestions = ref([]);
+        const truthQuestionsRaw = ref([]);
+        const dareQuestionsRaw = ref([]);
         const truthQuestions = ref([]);
         const dareQuestions = ref([]);
         const customTruthQuestions = ref([]);
         const customDareQuestions = ref([]);
         
+        const allTypes = ['朋友', '聚会', '恋人', '情侣', '社牛', '丢脸', '玩笑', '成人'];
+        const selectedTypes = ref(['朋友', '聚会','玩笑']);
+        
         const currentQuestion = ref(null);
         const customQuestion = ref('');
         const customType = ref('truth');
+        const customQuestionTypes = ref(['朋友', '聚会']);
         const showCustomPanel = ref(false);
         
         const players = ref([]);
@@ -40,6 +46,20 @@ createApp({
         const truthCount = computed(() => truthQuestions.value.length);
         const dareCount = computed(() => dareQuestions.value.length);
         const playerTotal = computed(() => players.value.length);
+        const isAllSelected = computed(() => selectedTypes.value.length === allTypes.length);
+        
+        function filterQuestionsByTypes(questions, types) {
+            if (types.length === 0) return [];
+            return questions.filter(q => {
+                if (typeof q === 'string') return true;
+                if (!q.types || q.types.length === 0) return true;
+                return q.types.some(t => types.includes(t));
+            });
+        }
+        
+        function getQuestionText(q) {
+            return typeof q === 'string' ? q : q.text;
+        }
         
         async function loadQuestions() {
             try {
@@ -63,62 +83,102 @@ createApp({
                 
                 defaultTruthQuestions.value = truthData.questions || [];
                 defaultDareQuestions.value = dareData.questions || [];
-                truthQuestions.value = [...defaultTruthQuestions.value];
-                dareQuestions.value = [...defaultDareQuestions.value];
+                truthQuestionsRaw.value = [...defaultTruthQuestions.value];
+                dareQuestionsRaw.value = [...defaultDareQuestions.value];
+                
+                updateFilteredQuestions();
                 
             } catch (error) {
                 console.error('加载题库失败:', error);
                 loadError.value = error.message;
                 
                 defaultTruthQuestions.value = [
-                    "你最近一次撒谎是什么时候？关于什么的？",
-                    "你有没有偷偷喜欢过朋友的对象？",
-                    "你做过最尴尬的事情是什么？"
+                    {text: "你最近一次撒谎是什么时候？关于什么的？", types: ["朋友", "聚会"]},
+                    {text: "你有没有偷偷喜欢过朋友的对象？", types: ["朋友", "聚会"]},
+                    {text: "你做过最尴尬的事情是什么？", types: ["朋友", "聚会", "恋人", "情侣"]}
                 ];
                 defaultDareQuestions.value = [
-                    "模仿一个动物叫三声！",
-                    "给你最近联系的人发一条表白信息！",
-                    "做20个深蹲！"
+                    {text: "模仿一个动物叫三声！", types: ["朋友", "聚会"]},
+                    {text: "给你最近联系的人发一条表白信息！", types: ["朋友", "聚会", "恋人", "情侣"]},
+                    {text: "做20个深蹲！", types: ["朋友", "聚会", "恋人", "情侣"]}
                 ];
-                truthQuestions.value = [...defaultTruthQuestions.value];
-                dareQuestions.value = [...defaultDareQuestions.value];
+                truthQuestionsRaw.value = [...defaultTruthQuestions.value];
+                dareQuestionsRaw.value = [...defaultDareQuestions.value];
+                updateFilteredQuestions();
             } finally {
                 isLoading.value = false;
             }
         }
         
+        function updateFilteredQuestions() {
+            const allQuestions = [...truthQuestionsRaw.value, ...customTruthQuestions.value];
+            truthQuestions.value = filterQuestionsByTypes(allQuestions, selectedTypes.value);
+            
+            const allDareQuestions = [...dareQuestionsRaw.value, ...customDareQuestions.value];
+            dareQuestions.value = filterQuestionsByTypes(allDareQuestions, selectedTypes.value);
+        }
+        
+        function toggleType(type) {
+            const index = selectedTypes.value.indexOf(type);
+            if (index > -1) {
+                selectedTypes.value.splice(index, 1);
+            } else {
+                selectedTypes.value.push(type);
+            }
+            updateFilteredQuestions();
+        }
+        
+        function selectAllTypes() {
+            selectedTypes.value = [...allTypes];
+            updateFilteredQuestions();
+        }
+        
+        function clearAllTypes() {
+            selectedTypes.value = [];
+            updateFilteredQuestions();
+        }
+        
         function drawQuestion(type) {
+            if (truthQuestions.value.length === 0 && dareQuestions.value.length === 0) {
+                alert('当前筛选条件下没有可用题目，请选择更多类型！');
+                return;
+            }
+            
             let question, questionType;
             
             if (type === 'truth') {
-                if (truthQuestions.value.length === 0) return;
+                if (truthQuestions.value.length === 0) {
+                    alert('当前筛选条件下没有真心话题目，请选择更多类型！');
+                    return;
+                }
                 const index = Math.floor(Math.random() * truthQuestions.value.length);
-                question = truthQuestions.value[index];
+                question = getQuestionText(truthQuestions.value[index]);
                 questionType = 'truth';
             } else if (type === 'dare') {
-                if (dareQuestions.value.length === 0) return;
+                if (dareQuestions.value.length === 0) {
+                    alert('当前筛选条件下没有大冒险题目，请选择更多类型！');
+                    return;
+                }
                 const index = Math.floor(Math.random() * dareQuestions.value.length);
-                question = dareQuestions.value[index];
+                question = getQuestionText(dareQuestions.value[index]);
                 questionType = 'dare';
             } else {
-                if (truthQuestions.value.length === 0 && dareQuestions.value.length === 0) return;
-                
                 if (truthQuestions.value.length === 0) {
                     const index = Math.floor(Math.random() * dareQuestions.value.length);
-                    question = dareQuestions.value[index];
+                    question = getQuestionText(dareQuestions.value[index]);
                     questionType = 'dare';
                 } else if (dareQuestions.value.length === 0) {
                     const index = Math.floor(Math.random() * truthQuestions.value.length);
-                    question = truthQuestions.value[index];
+                    question = getQuestionText(truthQuestions.value[index]);
                     questionType = 'truth';
                 } else {
                     if (Math.random() < 0.5) {
                         const index = Math.floor(Math.random() * truthQuestions.value.length);
-                        question = truthQuestions.value[index];
+                        question = getQuestionText(truthQuestions.value[index]);
                         questionType = 'truth';
                     } else {
                         const index = Math.floor(Math.random() * dareQuestions.value.length);
-                        question = dareQuestions.value[index];
+                        question = getQuestionText(dareQuestions.value[index]);
                         questionType = 'dare';
                     }
                 }
@@ -135,22 +195,27 @@ createApp({
         function addCustomQuestion() {
             if (!customQuestion.value.trim()) return;
             
+            const newQuestion = {
+                text: customQuestion.value.trim(),
+                types: [...customQuestionTypes.value]
+            };
+            
             if (customType.value === 'truth') {
-                truthQuestions.value.push(customQuestion.value.trim());
-                customTruthQuestions.value.push(customQuestion.value.trim());
+                customTruthQuestions.value.push(newQuestion);
             } else {
-                dareQuestions.value.push(customQuestion.value.trim());
-                customDareQuestions.value.push(customQuestion.value.trim());
+                customDareQuestions.value.push(newQuestion);
             }
             
+            updateFilteredQuestions();
             customQuestion.value = '';
         }
         
         function resetQuestions() {
-            truthQuestions.value = [...defaultTruthQuestions.value];
-            dareQuestions.value = [...defaultDareQuestions.value];
+            truthQuestionsRaw.value = [...defaultTruthQuestions.value];
+            dareQuestionsRaw.value = [...defaultDareQuestions.value];
             customTruthQuestions.value = [];
             customDareQuestions.value = [];
+            updateFilteredQuestions();
         }
         
         function copyQuestion() {
@@ -226,15 +291,6 @@ createApp({
             showConfirmModal.value = false;
         }
         
-        function loadSamplePlayers() {
-            const samples = ['小明', '小红', '小华', '小丽', '小强', '小美'];
-            samples.forEach(name => {
-                if (!players.value.includes(name)) {
-                    players.value.push(name);
-                }
-            });
-        }
-        
         function addToHistory(type, text) {
             const now = new Date();
             const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
@@ -258,11 +314,11 @@ createApp({
             let question, questionType;
             if (Math.random() < 0.5) {
                 const index = Math.floor(Math.random() * truthQuestions.value.length);
-                question = truthQuestions.value[index];
+                question = getQuestionText(truthQuestions.value[index]);
                 questionType = 'truth';
             } else {
                 const index = Math.floor(Math.random() * dareQuestions.value.length);
-                question = dareQuestions.value[index];
+                question = getQuestionText(dareQuestions.value[index]);
                 questionType = 'dare';
             }
             
@@ -306,17 +362,28 @@ createApp({
                 return;
             }
             
+            if (truthQuestions.value.length === 0 && dareQuestions.value.length === 0) {
+                alert('当前筛选条件下没有可用题目，请选择更多类型！');
+                return;
+            }
+            
             let question, questionType;
             
             if (type === 'truth') {
-                if (truthQuestions.value.length === 0) return;
+                if (truthQuestions.value.length === 0) {
+                    alert('当前筛选条件下没有真心话题目，请选择更多类型！');
+                    return;
+                }
                 const index = Math.floor(Math.random() * truthQuestions.value.length);
-                question = truthQuestions.value[index];
+                question = getQuestionText(truthQuestions.value[index]);
                 questionType = 'truth';
             } else {
-                if (dareQuestions.value.length === 0) return;
+                if (dareQuestions.value.length === 0) {
+                    alert('当前筛选条件下没有大冒险题目，请选择更多类型！');
+                    return;
+                }
                 const index = Math.floor(Math.random() * dareQuestions.value.length);
-                question = dareQuestions.value[index];
+                question = getQuestionText(dareQuestions.value[index]);
                 questionType = 'dare';
             }
             
@@ -339,10 +406,22 @@ createApp({
                 generateQuickPlayers();
             }
             
+            if (truthQuestions.value.length === 0 && dareQuestions.value.length === 0) {
+                alert('当前筛选条件下没有可用题目，请选择更多类型！');
+                return;
+            }
+            
             quickDrawPlayer();
             
             setTimeout(() => {
-                const randomType = Math.random() < 0.5 ? 'truth' : 'dare';
+                let randomType;
+                if (truthQuestions.value.length === 0) {
+                    randomType = 'dare';
+                } else if (dareQuestions.value.length === 0) {
+                    randomType = 'truth';
+                } else {
+                    randomType = Math.random() < 0.5 ? 'truth' : 'dare';
+                }
                 quickDrawQuestion(randomType);
             }, 300);
         }
@@ -405,6 +484,7 @@ createApp({
             currentQuestion,
             customQuestion,
             customType,
+            customQuestionTypes,
             showCustomPanel,
             players,
             newPlayer,
@@ -425,6 +505,8 @@ createApp({
             quickSelectedPlayer,
             quickCurrentQuestion,
             quickCombinedResult,
+            allTypes,
+            selectedTypes,
             loadQuestions,
             drawQuestion,
             addCustomQuestion,
@@ -437,7 +519,6 @@ createApp({
             drawPlayer,
             confirmClearPlayers,
             clearAllPlayers,
-            loadSamplePlayers,
             randomAll,
             generateQuickPlayers,
             quickDrawPlayer,
@@ -445,7 +526,11 @@ createApp({
             quickRandomAll,
             resetQuickMode,
             latestCommit,
-            commitLoading
+            commitLoading,
+            toggleType,
+            selectAllTypes,
+            clearAllTypes,
+            isAllSelected
         };
     }
 }).mount('#app');

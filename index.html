@@ -102,6 +102,34 @@
                         </div>
                     </div>
 
+                    <div class="mb-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <label class="text-gray-400 text-sm">题库类型：</label>
+                            <button @click="selectAllTypes" 
+                                    class="text-xs px-2 py-1 rounded transition-colors"
+                                    :class="isAllSelected ? 'bg-neon-green text-dark-bg font-semibold' : 'bg-white/10 text-gray-300 hover:bg-white/20'">
+                                全选
+                            </button>
+                            <button @click="clearAllTypes" 
+                                    class="text-xs px-2 py-1 rounded bg-white/10 text-gray-300 hover:bg-white/20 transition-colors">
+                                清空
+                            </button>
+                            <span v-if="isAllSelected" class="text-xs text-neon-green">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                已全选所有类型
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button v-for="type in allTypes" 
+                                    :key="type"
+                                    @click="toggleType(type)"
+                                    class="px-3 py-1.5 rounded-full text-sm font-medium transition-all"
+                                    :class="selectedTypes.includes(type) ? 'bg-neon-purple text-white' : 'bg-dark-surface text-gray-400 border border-white/10'">
+                                {{ type }}
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="flex flex-wrap gap-2 mb-5">
                         <div v-for="(player, index) in players" 
                              :key="index"
@@ -197,6 +225,34 @@
                         </div>
                     </div>
 
+                    <div class="mb-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <label class="text-gray-400 text-sm">题库类型：</label>
+                            <button @click="selectAllTypes" 
+                                    class="text-xs px-2 py-1 rounded transition-colors"
+                                    :class="isAllSelected ? 'bg-neon-green text-dark-bg font-semibold' : 'bg-white/10 text-gray-300 hover:bg-white/20'">
+                                全选
+                            </button>
+                            <button @click="clearAllTypes" 
+                                    class="text-xs px-2 py-1 rounded bg-white/10 text-gray-300 hover:bg-white/20 transition-colors">
+                                清空
+                            </button>
+                            <span v-if="isAllSelected" class="text-xs text-neon-green">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                已全选所有类型
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button v-for="type in allTypes" 
+                                    :key="type"
+                                    @click="toggleType(type)"
+                                    class="px-3 py-1.5 rounded-full text-sm font-medium transition-all"
+                                    :class="selectedTypes.includes(type) ? 'bg-neon-purple text-white' : 'bg-dark-surface text-gray-400 border border-white/10'">
+                                {{ type }}
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="flex flex-wrap gap-3 mb-5">
                         <button @click="drawQuestion('truth')" 
                                 class="btn-neon btn-truth px-6 py-3 rounded-xl font-semibold text-white flex items-center gap-2">
@@ -259,6 +315,18 @@
                                         class="btn-neon btn-random px-4 py-2 rounded-lg font-semibold text-white">
                                     <i class="fas fa-plus"></i>
                                 </button>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="text-gray-400 text-xs">题目类型：</label>
+                                <div class="flex flex-wrap gap-1">
+                                    <button v-for="type in allTypes" 
+                                            :key="type"
+                                            @click="customQuestionTypes.includes(type) ? customQuestionTypes.splice(customQuestionTypes.indexOf(type), 1) : customQuestionTypes.push(type)"
+                                            class="px-2 py-0.5 rounded-full text-xs font-medium transition-all"
+                                            :class="customQuestionTypes.includes(type) ? 'bg-neon-purple/50 text-white' : 'bg-dark-surface text-gray-400 border border-white/10'">
+                                        {{ type }}
+                                    </button>
+                                </div>
                             </div>
                             <button @click="resetQuestions" 
                                     class="text-sm text-gray-400 hover:text-neon-pink transition-colors">
@@ -453,7 +521,7 @@
                     </div>
                     <div class="text-center text-gray-500 text-sm">
                         <div class="flex flex-wrap justify-center items-center gap-4 mb-3">
-                            <span>题库更新时间：2026年4月18日</span>
+                            <span>题库更新时间：2026年4月19日</span>
                             <span class="text-gray-600">|</span>
                             <div v-if="commitLoading">
                                 <i class="fas fa-spinner fa-spin mr-1"></i>
