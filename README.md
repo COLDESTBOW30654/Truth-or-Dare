@@ -37,6 +37,7 @@
 <p align="center">
   <b>👉 <a href="https://truth-or-dare.blym.top/">https://truth-or-dare.blym.top/</a></b>
 </p>
+
 ## 🖼️ 图片展示
 
 ![truth-or-dare.blym.top](./img/truth-or-dare.blym.top.jpeg)
