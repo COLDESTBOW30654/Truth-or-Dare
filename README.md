@@ -37,7 +37,7 @@
 
 ### 🎲 真心话大冒险
 
-- **丰富题库**：内置 239+ 真心话题目、300+ 大冒险题目
+- **丰富题库**：内置 210+ 真心话题目、200+ 大冒险题目
 - **类型筛选**：支持按类型筛选题目（朋友、聚会、恋人、情侣、社牛、丢脸、玩笑、成人等）
 - **智能过滤**：默认过滤成人内容和尴尬类型，用户可自行选择
 - **自定义题库**：支持添加自定义题目
@@ -110,8 +110,8 @@ Truth-or-Dare/
 ├── js/
 │   └── app.js          # Vue 应用逻辑
 ├── data/
-│   ├── truth.json      # 真心话题库 (239+ 题)
-│   └── dare.json       # 大冒险题库 (300+ 题)
+│   ├── truth.json      # 真心话题库 (210+ 题)
+│   └── dare.json       # 大冒险题库 (200+ 题)
 └── README.md           # 项目说明
 ```
 
@@ -196,6 +196,29 @@ Truth-or-Dare/
 
 - 感谢所有贡献者的支持
 - 感谢 Vue.js 和 Tailwind CSS 社区
+
+***
+
+## 💡 参与贡献题库
+
+<p align="center">
+  <b>想让游戏更有趣？快来贡献你的创意题目吧！</b>
+</p>
+
+<p align="center">
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/edit/main/data/truth.json">
+    <img src="https://img.shields.io/badge/编辑真心话题库-blue?style=for-the-badge&logo=github" alt="编辑真心话题库">
+  </a>
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/edit/main/data/dare.json">
+    <img src="https://img.shields.io/badge/编辑大冒险题库-pink?style=for-the-badge&logo=github" alt="编辑大冒险题库">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/pulls">
+    <img src="https://img.shields.io/badge/查看所有PR-purple?style=for-the-badge&logo=github" alt="查看PR">
+  </a>
+</p>
 
 ***
 
