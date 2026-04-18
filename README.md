@@ -11,14 +11,14 @@
 <p align="center">
   <b>聚会必备神器，让欢乐升级！</b>
 </p>
-
 <p align="center">
-  <a href="#功能特点">功能特点</a> •
-  <a href="#在线预览">在线预览</a> •
-  <a href="#快速开始">快速开始</a> •
-  <a href="#项目结构">项目结构</a> •
-  <a href="#技术栈">技术栈</a>
+  <a href="##在线预览">在线预览</a> •
+  <a href="##快速开始">快速开始</a> •
+  <a href="##项目结构">项目结构</a> •
+  <a href="##技术栈">技术栈</a>
+  <a href="##图片展示">图片展示</a>
 </p>
+
 
 ***
 
@@ -37,6 +37,9 @@
 <p align="center">
   <b>👉 <a href="https://truth-or-dare.blym.top/">https://truth-or-dare.blym.top/</a></b>
 </p>
+## 🖼️ 图片展示
+
+![truth-or-dare.blym.top](./img/truth-or-dare.blym.top.jpeg)
 
 ## ✨ 功能特点
 
