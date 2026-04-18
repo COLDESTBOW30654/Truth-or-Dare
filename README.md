@@ -34,10 +34,6 @@
 
 ![truth-or-dare.blym.top](./img/truth-or-dare.blym.top.jpeg)
 
-## 🖼️ 图片展示
-
-![truth-or-dare.blym.top](./img/truth-or-dare.blym.top.jpeg)
-
 ## ✨ 功能特点
 
 ### 🎯 快速模式
