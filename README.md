@@ -233,10 +233,10 @@ Truth-or-Dare/
 </p>
 
 <p align="center">
-  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/main/data/truth/">
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/tree/main/data/truth/">
     <img src="https://img.shields.io/badge/编辑真心话-blue?style=for-the-badge&logo=github" alt="朋友真心话">
   </a>
-  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/main/data/dare/">
+  <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/tree/main/data/dare/">
     <img src="https://img.shields.io/badge/编辑大冒险-pink?style=for-the-badge&logo=github" alt="朋友大冒险">
   </a>
   <a href="https://github.com/COLDESTBOW30654/Truth-or-Dare/edit/main/data/types-config.json">
