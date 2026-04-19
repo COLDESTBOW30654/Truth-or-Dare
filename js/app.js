@@ -46,6 +46,11 @@ createApp({
         const latestCommit = ref(null);
         const commitLoading = ref(true);
         
+        const announcements = ref([]);
+        const showAnnouncements = ref(true);
+        const showAnnouncementModal = ref(false);
+        const currentAnnouncement = ref(null);
+        
         const truthCount = computed(() => truthQuestions.value.length);
         const dareCount = computed(() => dareQuestions.value.length);
         const playerTotal = computed(() => players.value.length);
@@ -567,9 +572,59 @@ createApp({
             return `${year}年${month}月${day}日 ${hours}:${minutes}`;
         }
         
+        function formatAnnouncementDate(dateStr) {
+            const date = new Date(dateStr);
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${month}-${day}`;
+        }
+        
+        function formatAnnouncementDateTime(dateStr) {
+            const date = new Date(dateStr);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+        }
+        
+        async function fetchAnnouncements() {
+            try {
+                const response = await fetch('https://announcement.blym.top/api.php?route=/public/announcements&site_id=4');
+                const result = await response.json();
+                
+                if (result.success && result.data && Array.isArray(result.data)) {
+                    announcements.value = result.data;
+                } else {
+                    announcements.value = [];
+                }
+            } catch (error) {
+                console.error('Failed to fetch announcements:', error);
+                announcements.value = [];
+            }
+        }
+        
+        async function openAnnouncement(item) {
+            try {
+                const response = await fetch(`https://announcement.blym.top/api.php?route=/public/announcements/${item.id}`);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    currentAnnouncement.value = result.data;
+                    showAnnouncementModal.value = true;
+                }
+            } catch (error) {
+                console.error('Failed to fetch announcement detail:', error);
+                currentAnnouncement.value = item;
+                showAnnouncementModal.value = true;
+            }
+        }
+        
         onMounted(() => {
             loadQuestions();
             fetchLatestCommit();
+            fetchAnnouncements();
         });
         
         return {
@@ -627,7 +682,14 @@ createApp({
             clearAllTypes,
             isAllSelected,
             confirmAdultType,
-            cancelAdultType
+            cancelAdultType,
+            announcements,
+            showAnnouncements,
+            showAnnouncementModal,
+            currentAnnouncement,
+            openAnnouncement,
+            formatAnnouncementDate,
+            formatAnnouncementDateTime
         };
     }
 }).mount('#app');
