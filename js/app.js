@@ -27,6 +27,8 @@ createApp({
         const showBatchAdd = ref(false);
         const selectedPlayer = ref(null);
         const showConfirmModal = ref(false);
+        const showAdultConfirmModal = ref(false);
+        const pendingAdultType = ref(null);
         
         const history = ref([]);
         const combinedResult = ref(null);
@@ -174,15 +176,43 @@ createApp({
             const index = selectedTypes.value.indexOf(type);
             if (index > -1) {
                 selectedTypes.value.splice(index, 1);
+                updateFilteredQuestions();
             } else {
-                selectedTypes.value.push(type);
+                if (type === '成人') {
+                    pendingAdultType.value = type;
+                    showAdultConfirmModal.value = true;
+                } else {
+                    selectedTypes.value.push(type);
+                    updateFilteredQuestions();
+                }
             }
-            updateFilteredQuestions();
+        }
+        
+        function confirmAdultType() {
+            if (pendingAdultType.value === 'selectAll') {
+                selectedTypes.value = [...allTypes.value];
+                updateFilteredQuestions();
+            } else if (pendingAdultType.value) {
+                selectedTypes.value.push(pendingAdultType.value);
+                updateFilteredQuestions();
+            }
+            showAdultConfirmModal.value = false;
+            pendingAdultType.value = null;
+        }
+        
+        function cancelAdultType() {
+            showAdultConfirmModal.value = false;
+            pendingAdultType.value = null;
         }
         
         function selectAllTypes() {
-            selectedTypes.value = [...allTypes.value];
-            updateFilteredQuestions();
+            if (allTypes.value.includes('成人') && !selectedTypes.value.includes('成人')) {
+                pendingAdultType.value = 'selectAll';
+                showAdultConfirmModal.value = true;
+            } else {
+                selectedTypes.value = [...allTypes.value];
+                updateFilteredQuestions();
+            }
         }
         
         function clearAllTypes() {
@@ -556,6 +586,7 @@ createApp({
             showBatchAdd,
             selectedPlayer,
             showConfirmModal,
+            showAdultConfirmModal,
             history,
             combinedResult,
             showCopyToast,
@@ -594,7 +625,9 @@ createApp({
             toggleType,
             selectAllTypes,
             clearAllTypes,
-            isAllSelected
+            isAllSelected,
+            confirmAdultType,
+            cancelAdultType
         };
     }
 }).mount('#app');

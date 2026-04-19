@@ -564,12 +564,6 @@
                                class="footer-link">
                                 GitHub
                             </a>
-                            <span class="mx-2">|</span>
-                            <a href="https://gitee.com/coldestbow30654/truth-or-dare" 
-                               target="_blank" 
-                               class="footer-link">
-                                Gitee 镜像
-                            </a>
                         </p>
                         <div class="mb-4 p-4 rounded-xl bg-white/5 border border-white/10">
                             <p class="text-neon-purple font-semibold mb-2">
@@ -623,6 +617,38 @@
                     <button @click="clearAllPlayers" 
                             class="flex-1 py-3 rounded-xl bg-neon-pink text-white hover:bg-neon-pink/80 transition-colors">
                         确认清空
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="showAdultConfirmModal" 
+             class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+             @click.self="cancelAdultType">
+            <div class="confirm-modal glass-card rounded-2xl p-6 max-w-md w-full">
+                <div class="text-center mb-4">
+                    <i class="fas fa-exclamation-triangle text-5xl text-neon-pink mb-3"></i>
+                    <h3 class="text-xl font-bold text-neon-pink">⚠️ 年龄验证提醒</h3>
+                </div>
+                <div class="bg-red-500/20 border border-red-500/50 rounded-xl p-4 mb-4">
+                    <p class="text-red-300 text-center font-semibold mb-2">🔞 此类型包含成人内容</p>
+                    <p class="text-gray-300 text-sm text-center mb-2">请确认您已年满18周岁</p>
+                    <p class="text-gray-400 text-xs text-center">该内容仅适合成年人，不适合在聚会或公共场合使用</p>
+                </div>
+                <div class="bg-yellow-500/20 border border-yellow-500/50 rounded-xl p-3 mb-4">
+                    <p class="text-yellow-300 text-sm text-center">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        再次提醒：请勿在聚会、家庭聚会等场合使用此类型
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <button @click="cancelAdultType" 
+                            class="flex-1 py-3 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors">
+                        取消
+                    </button>
+                    <button @click="confirmAdultType" 
+                            class="flex-1 py-3 rounded-xl bg-neon-pink text-white hover:bg-neon-pink/80 transition-colors">
+                        我已满18岁，确认
                     </button>
                 </div>
             </div>
