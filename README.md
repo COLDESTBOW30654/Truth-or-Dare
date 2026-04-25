@@ -21,7 +21,7 @@
 ## 🌐 在线预览
 
 <p align="center">
-  <a href="https://truth-or-dare.blym.top/">
+  <a href="https://truth-or-dare.119567.xyz/">
     <img src="https://img.shields.io/badge/在线预览-点击访问-brightgreen?style=for-the-badge&logo=google-chrome" alt="在线预览">
   </a>
 </p>
@@ -29,6 +29,7 @@
 <p align="center">
   <b>👉 <a href="https://truth-or-dare.blym.top/">https://truth-or-dare.119567.xyz/</a></b>
 </p>
+
 ## 🖼️ 图片展示
 
 ![truth-or-dare.blym.top](./img/truth-or-dare.blym.top.jpeg)
